@@ -1,13 +1,14 @@
-- name: Create jenkins jobs
+- name: Create Jenkins Jobs
   hosts: localhost
   roles:
     - jenkins
   vars:
     folders:
-      - { folder_name: "CI-Pipeline" }
-      - { folder_name: "Infra-jobs" }
+      - { folder_name: "CI-Pipelines" }
+      - { folder_name: "Infra-Jobs" }
     mjobs:
-      - { job_name: "cart", repo_name: "https://github.com/vsoujan/cart.git", folder_name: "CI-Pipeline" }
+      - { job_name: "cart", repo_name: "https://github.com/vsoujan/cart", folder_name: "CI-Pipelines" }
 
     sjobs:
-      - { job_name: "roboshop-terraform", repo_name: "https://github.com/vsoujan/roboshop-terraform.git", folder_name: "Infra-jobs" }
+      - { job_name: "roboshop-terraform", repo_name: "https://github.com/vsoujan/roboshop-terraform", folder_name: "Infra-Jobs" }
+
