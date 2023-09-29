@@ -1,3 +1,8 @@
+- name: Create folder
+  ansible.builtin.include_tasks:
+    file: folders.yml
+  loop: "{{ folders }}"
+
 - name: Create a multi branch pipeline
   ansible.builtin.include_tasks:
     file: mjob.yml
