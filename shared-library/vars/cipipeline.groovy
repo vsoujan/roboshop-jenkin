@@ -1,41 +1,35 @@
 def call() {
-    pipeline {
-        agent any
-        stages {
-            stage('Compile Code') {
-                steps {
-                    sh 'env'
-                }
-            }
+    node('workstation') {
 
-            stage('Test') {
-                steps {
-                    echo 'Hello World'
-                }
-            }
+        sh "find . | sed -e '1d' |xargs rm -rf"
+        if(env.TAG_NAME ==~ ".*") {
+            env.branch_name = "refs/tags/${env.TAG_NAME}"
+        } else {
+            env.branch_name = "${env.BRANCH_NAME}"
+        }
+        checkout scmGit(
+                branches: [[name: branch_name]],
+                userRemoteConfigs: [[url: "https://github.com/vsoujan/${component}"]]
+        )
 
-            stage('Code Quality') {
-                steps {
-                    echo 'Hello World'
-                }
-            }
+        if(env.TAG_NAME ==~ ".*"){
+            common.compile()
+            common.release()
+        }else {
+            if(env.BRANCH_NAME == "main") {
+                common.compile()
+                common.test()
+                common.codeQuality()
+                common.codeSecurity()
+            } else {
+                common.compile()
+                common.test()
+                common.codeQuality()
 
-            stage('Code Security') {
-                when {
-                    expression { BRANCH_NAME == "main"}
-                }
-                steps {
-                    echo 'Hello World'
-                }
             }
+        }
 
-            stage('Release') {
-                steps {
-                    echo 'Hello World'
-                }
-            }
+
 
         }
     }
-
-}
